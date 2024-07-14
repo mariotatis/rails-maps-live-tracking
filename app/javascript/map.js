@@ -75,3 +75,17 @@ document.addEventListener('DOMContentLoaded', function() {
       .catch(error => console.error('Error:', error));
   });
 });
+
+
+//get marker
+// const markerId = 'marker_1';
+// const marker = markers[markerId];
+
+// if (marker) {
+//   const pos = marker.getPosition();
+//   const latitude = pos.lat();
+//   const longitude = pos.lng();
+//   console.log(`Marker ${markerId} current position: lat=${latitude}, lng=${longitude}`);
+// } else {
+//   console.log('Marker not found with markerId:', markerId);
+// }
