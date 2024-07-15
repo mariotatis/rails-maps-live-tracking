@@ -5,6 +5,7 @@ class PagesController < ApplicationController
   end
 
   def simulate_updates
+    puts "*" * 80
     existing_marker_ids = ["marker_1", "marker_2", "marker_3", "marker_4", "marker_0"]
 
     threads = existing_marker_ids.map do |marker_id|
