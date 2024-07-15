@@ -12,20 +12,25 @@ function initMap() {
     fullscreenControl: false
   });
 
-  const markerCount = window.markerCount;
-  for (let i = 0; i < markerCount; i++) {
-    let markerId = `marker_${i}`;
-    let marker = new google.maps.Marker({
-      position: {
-        lat: startPosition.lat + (Math.random() - 0.002) * 0.002,
-        lng: startPosition.lng + (Math.random() - 0.002) * 0.002
-      },
-      label: "" + i,
-      map: map,
-      markerId: markerId
-    });
-    markers[markerId] = marker;
-  }
+  // const markerCount = window.markerCount;
+  // for (let i = 0; i < markerCount; i++) {
+  //   let markerId = `marker_${i}`;
+  //   let marker = new google.maps.Marker({
+  //     position: {
+  //       lat: startPosition.lat + (Math.random() - 0.002) * 0.002,
+  //       lng: startPosition.lng + (Math.random() - 0.002) * 0.002
+  //     },
+  //     label: "" + i,
+  //     map: map,
+  //     markerId: markerId,
+  //     metadata: {
+  //       name: `Marker ${i}`,
+  //       description: `Description for marker ${i}`,
+  //       lastPositionChange: new Date()
+  //     }
+  //   });
+  //   markers[markerId] = marker;
+  // }
 }
 
 function animateMarker(marker, newPosition) {
@@ -43,24 +48,37 @@ function animateMarker(marker, newPosition) {
       i++;
     } else {
       clearInterval(interval);
+      marker.metadata.lastPositionChange = new Date(); // Update last position change date
     }
   }, 20);
 }
 
 window.updateMap = function(data) {
-  if (map && Object.keys(markers).length > 0) {
+  if (map) {
     data.locations.forEach(location => {
       let markerId = location.markerId;
+      let newPosition = new google.maps.LatLng(location.latitude, location.longitude);
       if (markers[markerId]) {
-        let newPosition = new google.maps.LatLng(location.latitude, location.longitude);
         animateMarker(markers[markerId], newPosition);
         console.log(`Marker ${markerId} moved to:`, newPosition);
       } else {
-        console.error(`Marker with markerId ${markerId} not found.`);
+        // Create a new marker if it doesn't exist
+        let marker = new google.maps.Marker({
+          position: newPosition,
+          map: map,
+          markerId: markerId,
+          metadata: {
+            name: `New Marker ${markerId}`,
+            description: `Description for new marker ${markerId}`,
+            lastPositionChange: new Date()
+          }
+        });
+        markers[markerId] = marker;
+        console.log(`New marker ${markerId} created at:`, newPosition);
       }
     });
   } else {
-    console.error("Map or markers are not initialized.");
+    console.error("Map is not initialized.");
   }
 };
 
@@ -76,8 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-
-//get marker
+// Get marker and its metadata
 // const markerId = 'marker_1';
 // const marker = markers[markerId];
 
@@ -86,6 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
 //   const latitude = pos.lat();
 //   const longitude = pos.lng();
 //   console.log(`Marker ${markerId} current position: lat=${latitude}, lng=${longitude}`);
+//   console.log(`Marker ${markerId} metadata:`, marker.metadata);
 // } else {
 //   console.log('Marker not found with markerId:', markerId);
 // }
