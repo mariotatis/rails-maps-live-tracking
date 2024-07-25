@@ -2,12 +2,12 @@ import consumer from "channels/consumer";
 
 consumer.subscriptions.create("LocationsChannel", {
   connected() {
-    console.log("Connected to LocationsChannel");
+    console.log("Connected");
     document.getElementById('connection-status').classList.add('connected');
   },
   
   disconnected() {
-    console.log("Disconnected from LocationsChannel");
+    console.log("Disconnected");
     document.getElementById('connection-status').classList.remove('connected');
   },
   
@@ -16,7 +16,7 @@ consumer.subscriptions.create("LocationsChannel", {
     if (window.updateMap) {
       window.updateMap(data);
     } else {
-      console.error("updateMap function is not defined.");
+      console.error("error");
     }
   }
 });

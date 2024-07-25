@@ -12,24 +12,59 @@
   </head>
 
 <body class="bg-slate-100 focus:outline-none">
-    <div class="container mx-auto">
-      <nav class="text-base font-sans flex flex-col text-center sm:flex-row sm:text-left sm:justify-between py-4 px-6 bg-white  mb-4 mt-3 sm:items-baseline w-full">
-        <div class="mb-2 sm:mb-0">
-          <a href="#" class=" no-underline text-grey-darkest hover:text-blue-dark">Home</a>
-          <span class="dot" id="connection-status"></span>
-          </div>
-          <div>
-
-          <button id="start-simulation-btn" class="bg-blue-500 hover:bg-blue-700 active:bg-blue-500 active:bg-blue-100 text-white py-2 px-4 rounded text-sm">Simulate Updates</button>                    
-
-        </div>
-      </nav>
+  <div class="container mx-auto">
+    <nav class="text-base font-sans flex flex-col text-center sm:flex-row sm:text-left py-4 px-6 bg-white mb-4 mt-3 w-full">
+      <div class="flex items-center space-x-3 lg:pr-16 pr-6">
+        <img class="h-16" src="/logo.png">
+        <span class="dot" id="connection-status"></span>
+      </div>
+      
+      <div class="flex flex-grow items-center justify-end">
+        <button id="start-data-btn" class="bg-slate-500 hover:bg-slate-700 active:bg-slate-500 active:bg-slate-100 text-white py-2 px-4 rounded text-sm ml-4 self-center">
+          Start
+        </button>
+        <button id="start-simulation-btn" class="bg-slate-500 hover:bg-slate-700 active:bg-slate-500 active:bg-slate-100 text-white py-2 px-4 rounded text-sm ml-4 self-center">
+          Simulate
+        </button>      
+        <button id="" class="bg-blue-500 hover:bg-blue-700 active:bg-blue-500 active:bg-blue-100 text-white py-2 px-4 rounded text-sm ml-4 self-center">
+          Login
+          <i class="fas fa-user ms-2"></i>
+        </button>
+      </div>
+    </nav>
 
     <%= yield %>
     </div>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script async defer
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDKLF-uu4vTINNZSmZvq2vjQnKwtkQYWHc&callback=initMap">
     </script>
-  </body>
+
+    <script>
+    // Initialize map when DOM content is loaded
+
+window.onload = function() {
+  initMap();
+
+  document.getElementById('start-simulation-btn').addEventListener('click', function(event) {
+    event.preventDefault();
+    console.log("simulate_updates")
+    fetch('/simulate_updates')
+      .then(response => response.text())
+      .then(data => console.log("Simulation started", data))
+      .catch(error => console.error('Error:', error));
+  });
+
+  document.getElementById('start-data-btn').addEventListener('click', function(event) {
+    event.preventDefault();
+    console.log("start_data")
+    fetch('/start_data')
+      .then(response => response.text())
+      .then(data => console.log("Data reset", data))
+      .catch(error => console.error('Error:', error));
+  });
+};
+    </script>
+</body>
 </html>

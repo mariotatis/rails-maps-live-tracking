@@ -5,7 +5,7 @@ class LocationsController < ApplicationController
   def update_location
     lat = params[:lat].to_f
     lng = params[:lng].to_f
-    marker_id = params[:marker_id] 
+    marker_id = params[:marker_id]
 
     render json: { message: "Received location update: lat=#{lat}, lng=#{lng}, marker_id=#{marker_id}" }, status: :ok
 
