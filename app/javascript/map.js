@@ -67,7 +67,7 @@ function calculateAndDisplayRoute(startAddress, endAddress) {
       // Set directionsRenderer options
       directionsRenderer.setOptions({
         polylineOptions: {
-          strokeColor: '#ee71ec', // Change the color here
+          strokeColor: '#eb62a9', // Change the color here
           strokeOpacity: 0.5, // Change the opacity here
           strokeWeight: 15 // Change the line thickness here
         }

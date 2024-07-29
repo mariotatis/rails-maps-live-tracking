@@ -20,6 +20,7 @@ class PagesController < ApplicationController
 
   def start_data
     START_POINTS.each_with_index do |path, i|
+      sleep(rand(1..3))
       ActionCable.server.broadcast('locations_channel', {
         locations: [{
           markerId: i,
