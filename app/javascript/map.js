@@ -3,32 +3,14 @@ let markers = {};
 let directionsService;
 let directionsRenderer;
 
-// Define a constant speed for animation (e.g., pixels per millisecond)
 const ANIMATION_DURATION = 800000; // Total animation duration in milliseconds
 const ANIMATION_INTERVAL = 20; // Interval between position updates in milliseconds
 
-
 const customMapStyle = [
-  {
-    featureType: "poi",
-    elementType: "labels",
-    stylers: [{ visibility: "off" }]
-  },
-  {
-    featureType: "transit",
-    elementType: "labels",
-    stylers: [{ visibility: "off" }]
-  },
-  {
-    featureType: "administrative",
-    elementType: "labels",
-    stylers: [{ visibility: "off" }]
-  },
-  {
-    featureType: "landscape",
-    elementType: "labels",
-    stylers: [{ visibility: "off" }]
-  }
+  { featureType: "poi", elementType: "labels", stylers: [{ visibility: "off" }] },
+  { featureType: "transit", elementType: "labels", stylers: [{ visibility: "off" }] },
+  { featureType: "administrative", elementType: "labels", stylers: [{ visibility: "off" }] },
+  { featureType: "landscape", elementType: "labels", stylers: [{ visibility: "off" }] }
 ];
 
 function initMap() {
@@ -64,7 +46,6 @@ function calculateAndDisplayRoute(startAddress, endAddress) {
     travelMode: google.maps.TravelMode.DRIVING // Change travel mode if needed
   }, (response, status) => {
     if (status === google.maps.DirectionsStatus.OK) {
-      // Set directionsRenderer options
       directionsRenderer.setOptions({
         polylineOptions: {
           strokeColor: '#eb62a9', // Change the color here
@@ -74,10 +55,8 @@ function calculateAndDisplayRoute(startAddress, endAddress) {
       });
       directionsRenderer.setDirections(response);
 
-      // Optionally add circles at start and end points
       const directionsData = response.routes[0].overview_path;
 
-      // Function to add a circle at a given position
       function addCircle(position, label, color) {
         new google.maps.Circle({
           center: position,
@@ -107,7 +86,6 @@ function calculateAndDisplayRoute(startAddress, endAddress) {
         });
       }
 
-      // Add start and end circles
       addCircle(directionsData[0], 'Start', '#6caffb'); 
       addCircle(directionsData[directionsData.length - 1], 'End', '#6caffb'); 
 
@@ -164,6 +142,20 @@ window.updateMap = function(data) {
             lastPositionChange: new Date()
           }
         });
+
+        // Add a click event listener to the marker
+        const infoWindow = new google.maps.InfoWindow({
+          content: `<div>
+              Marker ID: ${markerId}
+              <br>Latitude: ${location.latitude}
+              <br>Longitude: ${location.longitude}
+            </div>`
+        });
+
+        marker.addListener('click', function() {
+          infoWindow.open(map, marker);
+        });
+
         markers[markerId] = marker;
         console.log(`New marker ${markerId} created at:`, newPosition);
       }
