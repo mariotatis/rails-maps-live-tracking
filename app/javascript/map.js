@@ -3,8 +3,8 @@ let markers = {};
 let directionsService;
 let directionsRenderer;
 
-const ANIMATION_DURATION = 800000; // Total animation duration in milliseconds
-const ANIMATION_INTERVAL = 20; // Interval between position updates in milliseconds
+const ANIMATION_DURATION = 800000; // change this to make animation slower
+const ANIMATION_INTERVAL = 20;
 
 const customMapStyle = [
   { featureType: "poi", elementType: "labels", stylers: [{ visibility: "off" }] },
@@ -28,29 +28,23 @@ function initMap() {
   directionsService = new google.maps.DirectionsService();
   directionsRenderer = new google.maps.DirectionsRenderer({
     map: map,
-    suppressMarkers: true // Hide default markers
+    suppressMarkers: true
   });
 
-  // Example start and end addresses
-  const startAddress = 'Via 40 #calle 85, Riomar, Barranquilla, Atlántico'; // Replace with your start address
-  const endAddress = 'Cl. 47 #56-12, Barranquilla, Atlántico'; // Replace with your end address
-
-  // Calculate and display the route
-  calculateAndDisplayRoute(startAddress, endAddress);
 }
 
 function calculateAndDisplayRoute(startAddress, endAddress) {
   directionsService.route({
     origin: startAddress,
     destination: endAddress,
-    travelMode: google.maps.TravelMode.DRIVING // Change travel mode if needed
+    travelMode: google.maps.TravelMode.DRIVING // I tried walking but used the wrong route
   }, (response, status) => {
     if (status === google.maps.DirectionsStatus.OK) {
       directionsRenderer.setOptions({
         polylineOptions: {
-          strokeColor: '#eb62a9', // Change the color here
-          strokeOpacity: 0.5, // Change the opacity here
-          strokeWeight: 15 // Change the line thickness here
+          strokeColor: '#67eb62', 
+          strokeOpacity: 0.5,
+          strokeWeight: 15
         }
       });
       directionsRenderer.setDirections(response);
@@ -76,12 +70,12 @@ function calculateAndDisplayRoute(startAddress, endAddress) {
           label: {
             text: label,
             color: '#000000',
-            fontSize: '16px', // Adjust font size
-            fontWeight: 'bold' // Make text bold
+            fontSize: '16px',
+            fontWeight: 'bold'
           },
           icon: {
             path: google.maps.SymbolPath.CIRCLE,
-            scale: 0 // Hide default icon; only show the circle
+            scale: 0
           }
         });
       }
@@ -110,7 +104,7 @@ function animateMarker(marker, newPosition) {
       frame++;
     } else {
       clearInterval(interval);
-      marker.setPosition(newPosition); // Ensure the final position is set
+      marker.setPosition(newPosition);
     }
   }, ANIMATION_INTERVAL);
 }
@@ -131,8 +125,8 @@ window.updateMap = function(data) {
           map: map,
           markerId: markerId,
           icon: {
-            url: "https://myapp.koombea.com/temp/carnaval/" + markerId + ".png", // Custom image URL
-            scaledSize: new google.maps.Size(60, 60), // Adjust size as needed
+            url: "https://myapp.koombea.com/temp/carnaval/" + markerId + ".png",
+            scaledSize: new google.maps.Size(60, 60),
             origin: new google.maps.Point(0, 0),
             anchor: new google.maps.Point(0, 20)
           },
@@ -143,7 +137,7 @@ window.updateMap = function(data) {
           }
         });
 
-        // Add a click event listener to the marker
+        // This is the popup, we can show here any info we want
         const infoWindow = new google.maps.InfoWindow({
           content: `<div>
               Marker ID: ${markerId}

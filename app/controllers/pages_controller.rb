@@ -1,6 +1,6 @@
 class PagesController < ApplicationController
-  # Define the path with 14 points
-
+  
+  # These are the starting position
   START_POINTS = [
     [11.0266192, -74.8040628],
     [11.0272510, -74.8046100],
@@ -14,13 +14,11 @@ class PagesController < ApplicationController
     [11.005383, -74.788976]
   ]
 
-  def home
-    @markers = 5
-  end
+  def home;end
 
+  #this can be refactored on a public actionCable method and receive params
   def start_data
     START_POINTS.each_with_index do |path, i|
-      sleep(rand(1..3))
       ActionCable.server.broadcast('locations_channel', {
         locations: [{
           markerId: i,
@@ -29,6 +27,7 @@ class PagesController < ApplicationController
           time: Time.now
         }]
       })
+      sleep(rand(1..3))
     end
   end
 

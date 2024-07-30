@@ -12,7 +12,7 @@ module Action
     # CORS configuration, consider to remove this and use a proper token based security
     config.middleware.insert_before 0, Rack::Cors do
       allow do
-        origins '*'  # Adjust to your needs, '*' allows all origins
+        origins '*'
         resource '*', headers: :any, methods: [:get, :post, :options]
       end
     end

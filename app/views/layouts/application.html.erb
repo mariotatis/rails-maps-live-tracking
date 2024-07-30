@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Action</title>
+    <title>PoC</title>
     <%= csrf_meta_tags %>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
@@ -19,15 +19,17 @@
       </div>
       
       <div class="flex flex-grow items-center justify-end">
+        <button id="show-route-btn" class="bg-slate-500 hover:bg-slate-700 active:bg-slate-500 active:bg-slate-100 text-white py-2 px-4 rounded text-sm ml-4 self-center">
+          Show Route (1)
+        </button>
         <button id="start-data-btn" class="bg-slate-500 hover:bg-slate-700 active:bg-slate-500 active:bg-slate-100 text-white py-2 px-4 rounded text-sm ml-4 self-center">
-          Start
+          Start Position (2)
         </button>
         <button id="start-simulation-btn" class="bg-slate-500 hover:bg-slate-700 active:bg-slate-500 active:bg-slate-100 text-white py-2 px-4 rounded text-sm ml-4 self-center">
-          Simulate
-        </button>      
-        <button id="" class="bg-blue-500 hover:bg-blue-700 active:bg-blue-500 active:bg-blue-100 text-white py-2 px-4 rounded text-sm ml-4 self-center">
-          Login
-          <i class="fas fa-user ms-2"></i>
+          Simulate move (3)
+        </button>
+        <button id="show-queen-btn" class="bg-slate-500 hover:bg-slate-700 active:bg-slate-500 active:bg-slate-100 text-white py-2 px-4 rounded text-sm ml-4 self-center">
+          Show Queen (4)
         </button>
         <span class="dot ml-4" id="connection-status"></span>
       </div>
@@ -41,30 +43,63 @@
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDKLF-uu4vTINNZSmZvq2vjQnKwtkQYWHc&callback=initMap">
     </script>
 
-    <script>
-    // Initialize map when DOM content is loaded
+  <script>
+    window.onload = function() {
+      initMap();
 
-window.onload = function() {
-  initMap();
+function fetchData(url, logMessage, method = 'GET', params = {}) {
+  console.log(logMessage);
 
-  document.getElementById('start-simulation-btn').addEventListener('click', function(event) {
-    event.preventDefault();
-    console.log("simulate_updates")
-    fetch('/simulate_updates')
-      .then(response => response.text())
-      .then(data => console.log("Simulation started", data))
-      .catch(error => console.error('Error:', error));
-  });
+  const options = {
+    method: method,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
 
-  document.getElementById('start-data-btn').addEventListener('click', function(event) {
-    event.preventDefault();
-    console.log("start_data")
-    fetch('/start_data')
-      .then(response => response.text())
-      .then(data => console.log("Data reset", data))
-      .catch(error => console.error('Error:', error));
-  });
-};
-    </script>
+  if (method === 'POST') {
+    options.body = JSON.stringify(params);
+  }
+
+  fetch(url, options)
+    .then(response => response.json())
+    .then(data => console.log(logMessage, data))
+    .catch(error => console.error('Error:', error));
+}
+
+      document.getElementById('show-route-btn').addEventListener('click', function(event) {
+        event.preventDefault();
+        const startAddress = 'Via 40 #calle 85, Riomar, Barranquilla, Atlántico';
+        const endAddress = 'Cl. 47 #56-12, Barranquilla, Atlántico';
+        calculateAndDisplayRoute(startAddress, endAddress);
+        console.log("Draw map");
+      });
+
+      document.getElementById('start-data-btn').addEventListener('click', function(event) {
+        event.preventDefault();
+        fetchData('/start_data', "Create sample markers");
+      });
+
+      document.getElementById('start-simulation-btn').addEventListener('click', function(event) {
+        event.preventDefault();
+        fetchData('/simulate_updates', "Simulate marker position update");
+      });
+
+      document.getElementById('show-queen-btn').addEventListener('click', function(event) {
+        event.preventDefault();
+        fetchData('/update_location', "Location update", 'POST', {
+          marker_id: "8",
+          lat: "11.021863",
+          lng: "-74.804177"
+        });
+        fetchData('/update_location', "Location update", 'POST', {
+          marker_id: "8",
+          lat: "11.024314",
+          lng: "-74.802039"
+        });
+      });
+    };
+  </script>
+
 </body>
 </html>
